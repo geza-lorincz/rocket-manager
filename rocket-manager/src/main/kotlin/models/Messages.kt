@@ -1,8 +1,6 @@
 package com.models
 
 import kotlinx.serialization.Serializable
-import java.time.OffsetDateTime
-import java.util.UUID
 
 @Serializable
 data class MessageMetadata(
