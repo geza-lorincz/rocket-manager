@@ -98,7 +98,4 @@ class RocketServiceTest {
         val state = RocketService.getRocketState(channel)
         assertEquals(1000, state?.speed)
     }
-
-    @Test
-    fun `test `
 }
