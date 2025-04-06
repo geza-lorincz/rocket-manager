@@ -18,7 +18,7 @@ class RocketServiceTest {
     fun `should launch rocket and store correct data`() {
         val message = MessageWrapper(
             metadata = MessageMetadata("abc", 1, "2022-01-01T00:00:00Z", "RocketLaunched"),
-            content = Json.encodeToJsonElement(RocketLaunched("Falcon-9", 500, "ARTEMIS"))
+            message = Json.encodeToJsonElement(RocketLaunched("Falcon-9", 500, "ARTEMIS"))
         )
 
         service.handleMessage(message)

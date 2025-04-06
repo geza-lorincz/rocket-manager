@@ -13,5 +13,5 @@ data class MessageMetadata(
 @Serializable
 data class MessageWrapper(
     val metadata: MessageMetadata,
-    val content: kotlinx.serialization.json.JsonElement
+    val message: kotlinx.serialization.json.JsonElement
 )
