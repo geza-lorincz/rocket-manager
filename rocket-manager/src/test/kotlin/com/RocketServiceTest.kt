@@ -3,7 +3,6 @@ package com
 import com.models.*
 import com.service.RocketService
 import kotlinx.serialization.json.*
-import kotlinx.serialization.json.Json.Default.encodeToJsonElement
 import kotlin.test.*
 
 class RocketServiceTest {
@@ -26,7 +25,7 @@ class RocketServiceTest {
 
         val rocket = service.getRocket("abc")
         assertNotNull(rocket)
-        assertEquals("Falcon-9", rocket!!.type)
+        assertEquals("Falcon-9", rocket.type)
         assertEquals(500, rocket.speed)
         assertEquals("ARTEMIS", rocket.mission)
         assertEquals(1, rocket.lastMessageNumber)
