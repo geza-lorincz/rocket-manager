@@ -26,11 +26,11 @@ fun Application.configureRouting() {
         get("/rockets") {
             val rockets = RocketService.getAllRockets()
                 .map { it.toResposne() }
-            call.respond(rockets)
+            call.respond(mapOf("rockets" to rockets))
         }
 
-        get("/rockets/{id}") {
-            val id = call.parameters["id"]
+        get("/rocket") {
+            val id = call.request.queryParameters["id"]
             val rocket = id?.let { RocketService.getRocket(it) }
             if (rocket != null) call.respond(rocket.toResposne())
             else call.respondText("Rocket not found", status = io.ktor.http.HttpStatusCode.NotFound)
