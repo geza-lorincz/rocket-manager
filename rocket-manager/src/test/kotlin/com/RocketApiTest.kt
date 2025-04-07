@@ -1,24 +1,16 @@
 package com
 
 import com.models.response.RocketResponse
-import com.models.Rocket
-import com.service.RocketService
 import io.ktor.server.testing.*
 import io.ktor.http.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import kotlin.test.*
-import io.ktor.server.plugins.contentnegotiation.*
-import io.ktor.serialization.kotlinx.json.*
-import io.ktor.server.routing.*
 import io.ktor.server.application.*
-import io.ktor.server.response.*
-import io.ktor.server.request.*
 import kotlinx.serialization.json.Json
 import com.route.configureRouting
 
 class RocketApiTest {
-
 
     private fun Application.testModule() {
         configureRouting()
@@ -53,7 +45,7 @@ class RocketApiTest {
                 "messageTime": "2024-04-06T19:00:00+01:00",
                 "messageType": "RocketLaunched"
               },
-              "content": {
+              "message": {
                 "type": "Falcon-9",
                 "launchSpeed": 500,
                 "mission": "ARTEMIS"
@@ -66,7 +58,9 @@ class RocketApiTest {
             setBody(launchMessage)
         }
 
-        val response = client.get("/rockets/abc123")
+        val response = client.get("/rocket") {
+            parameter("id", "abc123")
+        }
         assertEquals(HttpStatusCode.OK, response.status)
         val json = Json { ignoreUnknownKeys = true }
         val body = json.decodeFromString(
@@ -95,7 +89,7 @@ class RocketApiTest {
                 "messageTime": "2024-04-06T19:00:00+01:00",
                 "messageType": "RocketLaunched"
               },
-              "content": {
+              "message": {
                 "type": "Falcon-9",
                 "launchSpeed": 500,
                 "mission": "ARTEMIS"
@@ -111,7 +105,7 @@ class RocketApiTest {
                 "messageTime": "2024-04-06T19:00:00+01:00",
                 "messageType": "RocketLaunched"
               },
-              "content": {
+              "message": {
                 "type": "Falcon-9",
                 "launchSpeed": 500,
                 "mission": "MOON"
@@ -128,7 +122,9 @@ class RocketApiTest {
             setBody(otherLaunchMessage)
         }
 
-        val response = client.get("/rockets/abc123")
+        val response = client.get("/rocket") {
+            parameter("id", "abc123")
+        }
         assertEquals(HttpStatusCode.OK, response.status)
         val json = Json { ignoreUnknownKeys = true }
         val body = json.decodeFromString(

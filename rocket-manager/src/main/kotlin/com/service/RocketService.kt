@@ -20,8 +20,8 @@ object RocketService {
 
         val rocket = rockets.computeIfAbsent(channel) { Rocket(channel = channel) }
 
-        // Skip if we've already processed a newer or same message
-        if (messageNumber <= rocket.lastMessageNumber) throw IllegalStateException("Message has already been processed before or is stale")
+        // Throw error if we've already processed a newer or same message
+        validateMessageOrder(messageNumber, rocket)
 
         logger.info("Handling $type for channel=$channel with content=${wrapper.message}")
 
@@ -32,33 +32,45 @@ object RocketService {
                 rocket.speed = payload.launchSpeed
                 rocket.mission = payload.mission
             }
+
             "RocketSpeedIncreased" -> {
                 val payload = json.decodeFromJsonElement<RocketSpeedIncreased>(wrapper.message)
                 rocket.speed += payload.by
             }
+
             "RocketSpeedDecreased" -> {
                 val payload = json.decodeFromJsonElement<RocketSpeedDecreased>(wrapper.message)
                 rocket.speed -= payload.by
             }
+
             "RocketExploded" -> {
                 val payload = json.decodeFromJsonElement<RocketExploded>(wrapper.message)
                 rocket.exploded = true
                 rocket.explosionReason = payload.reason
             }
+
             "MissionChanged" -> {
                 val payload = json.decodeFromJsonElement<MissionChanged>(wrapper.message)
-                if (channel in payload.channels) {
-                    rocket.mission = payload.newMission
+                payload.channels.forEach { id ->
+                    rockets[id]?.let { rocket ->
+                        rocket.mission = payload.newMission
+                    }
                 }
             }
         }
-
         rocket.lastMessageNumber = messageNumber
+        logger.info("Processed $type for channel=$channel with content=${wrapper.message}")
     }
 
-    fun getRocket(id: String): Rocket? = rockets[id]
+    fun getRocket(channel: String): Rocket? = rockets[channel]
 
     fun getAllRockets(): List<Rocket> = rockets.values.sortedBy { it.channel }
 
     fun clearAllRockets() = rockets.clear()
+
+    private fun validateMessageOrder(messageNumber: Int, rocket: Rocket) {
+        if (messageNumber <= rocket.lastMessageNumber) {
+            throw IllegalStateException("Message has already been processed before or is stale")
+        }
+    }
 }

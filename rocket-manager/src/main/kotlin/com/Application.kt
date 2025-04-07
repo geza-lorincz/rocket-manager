@@ -14,5 +14,4 @@ fun Application.module() {
         json()
     }
     configureRouting()
-
 }

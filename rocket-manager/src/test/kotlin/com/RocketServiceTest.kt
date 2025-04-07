@@ -61,7 +61,9 @@ class RocketServiceTest {
         )
 
         service.handleMessage(launch)
-        service.handleMessage(duplicate)
+        assertFailsWith<IllegalStateException> {
+            service.handleMessage(duplicate)
+        }
 
         val rocket = service.getRocket("abc")!!
         assertEquals(100, rocket.speed) // unchanged
@@ -131,5 +133,37 @@ class RocketServiceTest {
 
         val rocket = service.getRocket("abc")!!
         assertEquals("MOON", rocket.mission)
+    }
+
+    @Test
+    fun `should update mission for multiple channels`() {
+        val launch1 = MessageWrapper(
+            MessageMetadata("abc", 1, "now", "RocketLaunched"),
+            Json.encodeToJsonElement(RocketLaunched("Falcon-9", 100, "MOON"))
+        )
+        val launch2 = MessageWrapper(
+            MessageMetadata("xyz", 1, "now", "RocketLaunched"),
+            Json.encodeToJsonElement(RocketLaunched("Falcon-Heavy", 200, "MARS"))
+        )
+        val missionChange = MessageWrapper(
+            MessageMetadata("abc", 2, "now", "MissionChanged"),
+            Json.encodeToJsonElement(
+                MissionChanged(
+                    center = "ESA",
+                    channels = listOf("abc", "xyz"),
+                    newMission = "JUPITER"
+                )
+            )
+        )
+
+        service.handleMessage(launch1)
+        service.handleMessage(launch2)
+        service.handleMessage(missionChange)
+
+        val rocket1 = service.getRocket("abc")!!
+        val rocket2 = service.getRocket("xyz")!!
+
+        assertEquals("JUPITER", rocket1.mission)
+        assertEquals("JUPITER", rocket2.mission)
     }
 }
