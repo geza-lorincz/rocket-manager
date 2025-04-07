@@ -25,3 +25,11 @@ data class MissionChanged(
     val newMission: String
 )
 
+enum class MessageType {
+    RocketLaunched,
+    RocketSpeedIncreased,
+    RocketSpeedDecreased,
+    RocketExploded,
+    MissionChanged
+}
+
