@@ -25,7 +25,7 @@ fun Application.configureRouting() {
                 val message = Json.decodeFromString<MessageWrapper>(body)
                 logger.info("Received message: ${message.metadata.messageType} for ${message.metadata.channel}")
                 RocketService.handleMessage(message)
-                call.respondText("ok")
+                call.respondText("Message received and processed successfully")
             } catch (e: IllegalStateException) {
                 call.respond(HttpStatusCode.BadRequest, e.message ?: "Invalid request")
                 logger.error(e.message ?: "Invalid request")
