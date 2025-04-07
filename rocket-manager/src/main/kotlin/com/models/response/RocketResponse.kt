@@ -11,8 +11,3 @@ data class RocketResponse(
     val exploded: Boolean,
     val explosionReason: String? = null
 )
-
-@Serializable
-data class RocketListResponse(
-    val rockets: List<RocketResponse>
-)

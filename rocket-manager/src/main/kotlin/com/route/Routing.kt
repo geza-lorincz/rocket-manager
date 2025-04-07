@@ -18,7 +18,6 @@ fun Application.configureRouting() {
         }
         val logger = LoggerFactory.getLogger("Routes")
 
-
         post("/messages") {
             try {
                 val body = call.receiveText()
