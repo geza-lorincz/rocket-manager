@@ -50,6 +50,24 @@ class RocketServiceTest {
     }
 
     @Test
+    fun `should decrease rocket speed`() {
+        val launch = MessageWrapper(
+            MessageMetadata("abc", 1, "now", "RocketLaunched"),
+            Json.encodeToJsonElement(RocketLaunched("Falcon-9", 100, "MOON"))
+        )
+        val slowDown = MessageWrapper(
+            MessageMetadata("abc", 2, "now", "RocketSpeedDecreased"),
+            Json.encodeToJsonElement(RocketSpeedDecreased(50))
+        )
+
+        service.handleMessage(launch)
+        service.handleMessage(slowDown)
+
+        val rocket = service.getRocket("abc")!!
+        assertEquals(50, rocket.speed)
+    }
+
+    @Test
     fun `should ignore out-of-order message`() {
         val launch = MessageWrapper(
             MessageMetadata("abc", 3, "now", "RocketLaunched"),
@@ -70,7 +88,7 @@ class RocketServiceTest {
     }
 
     @Test
-    fun `should mark rocket as exploded`() {
+    fun `should mark rocket as exploded and save explosion reason`() {
         val launch = MessageWrapper(
             MessageMetadata("abc", 1, "now", "RocketLaunched"),
             Json.encodeToJsonElement(RocketLaunched("Falcon-9", 100, "MOON"))
@@ -85,6 +103,7 @@ class RocketServiceTest {
 
         val rocket = service.getRocket("abc")!!
         assertTrue(rocket.exploded)
+        assertEquals("ENGINE_FAILURE", rocket.explosionReason)
     }
 
     @Test

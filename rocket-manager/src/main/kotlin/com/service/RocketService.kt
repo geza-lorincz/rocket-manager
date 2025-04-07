@@ -20,7 +20,6 @@ object RocketService {
 
         val rocket = rockets.computeIfAbsent(channel) { Rocket(channel = channel) }
 
-        // Throw error if we've already processed a newer or same message
         validateMessageOrder(messageNumber, rocket)
 
         logger.info("Handling $type for channel=$channel with content=${wrapper.message}")
