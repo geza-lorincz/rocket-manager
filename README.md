@@ -1,6 +1,6 @@
 # rocket-manager
 
-This project was created by Geza Lorincz for the Lunar Backend Engineer Challenge. The service is responsible for receiving and processing rocket state updates. It uses Kotlin with Ktor and is designed to handle JSON messages related to rocket state changes. The service processes these updates and forwards them to the relevant destinations.
+This service is responsible for receiving and processing rocket state updates. It uses Kotlin with Ktor and is designed to handle JSON messages related to rocket state changes. The service processes these updates and keeps track of each rocket and their current state. The state of the rockets tracked by the system can be accessed by REST endpoints.
 
 ## Requirements
 Before you can build and run the service, make sure you have the following tools installed:
@@ -12,7 +12,7 @@ Before you can build and run the service, make sure you have the following tools
 ### 1. Clone the repository
 
 ### 2. Build the project and run the service using Gradle
-In a terminal in the same folder where gradlew and gradlew.bat are, run the following commands.
+In a terminal in the same folder where gradlew and gradlew.bat files are (./rocket-manager), run the following commands.
 
 On Mac:
 ```bash
@@ -37,6 +37,7 @@ The service should now be running. You can post messages with updates to rockets
 ```
 http://localhost:8088/messages
 ```
+If the message is posted successfully, a response confirming successful processing will be returned.
 
 Example data:
 ```
@@ -62,10 +63,10 @@ http://localhost:8088/rockets
 
 Or get a specific rocket based on it's channel:
 ```
-http://localhost:8088/rockets?id=193270a9-c9cf-404a-8f83-838e71d9ae67
+http://localhost:8088/rocket?id=193270a9-c9cf-404a-8f83-838e71d9ae67
 ```
 ## Testing
-Building the project will always trigger the unit tests to run. The tests can also be manually run via
+Building the project will always trigger the automated tests to run. The tests can also be manually run via
 ```bash
 ./gradlew test
 ```
