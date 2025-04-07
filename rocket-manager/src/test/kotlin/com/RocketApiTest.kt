@@ -12,7 +12,6 @@ import com.route.configureRouting
 
 class RocketApiTest {
 
-
     private fun Application.testModule() {
         configureRouting()
     }

@@ -11,14 +11,62 @@ Before you can build and run the service, make sure you have the following tools
 ## Getting started
 ### 1. Clone the repository
 
-### 2. Build the project using Gradle
+### 2. Build the project and run the service using Gradle
+In a terminal in the same folder where gradlew and gradlew.bat are, run the following commands.
+
+On Mac:
 ```bash
 ./gradlew build
-```
-### 3. Run the service locally
-```bash
 ./gradlew run
 ```
+On Windows:
+```bash
+.\gradlew build
+.\gradlew run
+```
+If the program successfully runs, you should see the following:
+```
+2025-04-07 02:55:22.656 [main] INFO  Application - Autoreload is disabled because the development mode is off.
+2025-04-07 02:55:22.862 [main] INFO  Application - Application started in 0.229 seconds.
+2025-04-07 02:55:22.976 [DefaultDispatcher-worker-1] INFO  Application - Responding at http://localhost:8088
+```
 
-### 4. Access endpoints
-The service should now be running
+### 3. Access endpoints
+The service should now be running. You can post messages with updates to rockets on the following endpoint using Postman or a `curl`:
+
+```
+http://localhost:8088/messages
+```
+
+Example data:
+```
+{
+"metadata": {
+"channel": "193270a9-c9cf-404a-8f83-838e71d9ae67",
+"messageNumber": 1,    
+"messageTime": "2022-02-02T19:39:05.86337+01:00",                                          
+"messageType": "RocketLaunched"                             
+},
+"message": {                                                    
+"type": "Falcon-9",
+"launchSpeed": 500,
+"mission": "ARTEMIS"
+}
+}
+```
+
+You can retrieve a list of all the rockets currently tracked by the system:
+```
+http://localhost:8088/rockets
+```
+
+Or get a specific rocket based on it's channel:
+```
+http://localhost:8088/rockets?id=193270a9-c9cf-404a-8f83-838e71d9ae67
+```
+## Testing
+Building the project will always trigger the unit tests to run. The tests can also be manually run via
+```bash
+./gradlew test
+```
+For more details of the test results, add `--info` to the end of the command.
