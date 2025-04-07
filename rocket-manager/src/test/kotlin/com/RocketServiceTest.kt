@@ -17,7 +17,7 @@ class RocketServiceTest {
     @Test
     fun `should launch rocket and store correct data`() {
         val message = MessageWrapper(
-            metadata = MessageMetadata("abc", 1, "2022-01-01T00:00:00Z", "RocketLaunched"),
+            metadata = MessageMetadata("abc", 1, "2022-01-01T00:00:00Z", MessageType.RocketLaunched),
             message = Json.encodeToJsonElement(RocketLaunched("Falcon-9", 500, "ARTEMIS"))
         )
 
@@ -34,11 +34,11 @@ class RocketServiceTest {
     @Test
     fun `should increase rocket speed`() {
         val launch = MessageWrapper(
-            MessageMetadata("abc", 1, "now", "RocketLaunched"),
+            MessageMetadata("abc", 1, "now", MessageType.RocketLaunched),
             Json.encodeToJsonElement(RocketLaunched("Falcon-9", 100, "MOON"))
         )
         val speedUp = MessageWrapper(
-            MessageMetadata("abc", 2, "now", "RocketSpeedIncreased"),
+            MessageMetadata("abc", 2, "now", MessageType.RocketSpeedIncreased),
             Json.encodeToJsonElement(RocketSpeedIncreased(400))
         )
 
@@ -52,11 +52,11 @@ class RocketServiceTest {
     @Test
     fun `should decrease rocket speed`() {
         val launch = MessageWrapper(
-            MessageMetadata("abc", 1, "now", "RocketLaunched"),
+            MessageMetadata("abc", 1, "now", MessageType.RocketLaunched),
             Json.encodeToJsonElement(RocketLaunched("Falcon-9", 100, "MOON"))
         )
         val slowDown = MessageWrapper(
-            MessageMetadata("abc", 2, "now", "RocketSpeedDecreased"),
+            MessageMetadata("abc", 2, "now", MessageType.RocketSpeedDecreased),
             Json.encodeToJsonElement(RocketSpeedDecreased(50))
         )
 
@@ -70,11 +70,11 @@ class RocketServiceTest {
     @Test
     fun `should ignore out-of-order message`() {
         val launch = MessageWrapper(
-            MessageMetadata("abc", 3, "now", "RocketLaunched"),
+            MessageMetadata("abc", 3, "now", MessageType.RocketLaunched),
             Json.encodeToJsonElement(RocketLaunched("Falcon-9", 100, "MOON"))
         )
         val duplicate = MessageWrapper(
-            MessageMetadata("abc", 2, "now", "RocketSpeedIncreased"),
+            MessageMetadata("abc", 2, "now", MessageType.RocketSpeedIncreased),
             Json.encodeToJsonElement(RocketSpeedIncreased(400))
         )
 
@@ -90,11 +90,11 @@ class RocketServiceTest {
     @Test
     fun `should mark rocket as exploded and save explosion reason`() {
         val launch = MessageWrapper(
-            MessageMetadata("abc", 1, "now", "RocketLaunched"),
+            MessageMetadata("abc", 1, "now", MessageType.RocketLaunched),
             Json.encodeToJsonElement(RocketLaunched("Falcon-9", 100, "MOON"))
         )
         val explode = MessageWrapper(
-            MessageMetadata("abc", 2, "now", "RocketExploded"),
+            MessageMetadata("abc", 2, "now", MessageType.RocketExploded),
             Json.encodeToJsonElement(RocketExploded("ENGINE_FAILURE"))
         )
 
@@ -109,11 +109,11 @@ class RocketServiceTest {
     @Test
     fun `should change mission only if channel is included`() {
         val launch = MessageWrapper(
-            MessageMetadata("abc", 1, "now", "RocketLaunched"),
+            MessageMetadata("abc", 1, "now", MessageType.RocketLaunched),
             Json.encodeToJsonElement(RocketLaunched("Falcon-9", 100, "MOON"))
         )
         val missionChange = MessageWrapper(
-            MessageMetadata("abc", 2, "now", "MissionChanged"),
+            MessageMetadata("abc", 2, "now", MessageType.MissionChanged),
             Json.encodeToJsonElement(
                 MissionChanged(
                     center = "ESA",
@@ -133,11 +133,11 @@ class RocketServiceTest {
     @Test
     fun `should not change mission if channel not included`() {
         val launch = MessageWrapper(
-            MessageMetadata("abc", 1, "now", "RocketLaunched"),
+            MessageMetadata("abc", 1, "now", MessageType.RocketLaunched),
             Json.encodeToJsonElement(RocketLaunched("Falcon-9", 100, "MOON"))
         )
         val missionChange = MessageWrapper(
-            MessageMetadata("abc", 2, "now", "MissionChanged"),
+            MessageMetadata("abc", 2, "now", MessageType.MissionChanged),
             Json.encodeToJsonElement(
                 MissionChanged(
                     center = "ESA",
@@ -157,15 +157,15 @@ class RocketServiceTest {
     @Test
     fun `should update mission for multiple channels`() {
         val launch1 = MessageWrapper(
-            MessageMetadata("abc", 1, "now", "RocketLaunched"),
+            MessageMetadata("abc", 1, "now", MessageType.RocketLaunched),
             Json.encodeToJsonElement(RocketLaunched("Falcon-9", 100, "MOON"))
         )
         val launch2 = MessageWrapper(
-            MessageMetadata("xyz", 1, "now", "RocketLaunched"),
+            MessageMetadata("xyz", 1, "now", MessageType.RocketLaunched),
             Json.encodeToJsonElement(RocketLaunched("Falcon-Heavy", 200, "MARS"))
         )
         val missionChange = MessageWrapper(
-            MessageMetadata("abc", 2, "now", "MissionChanged"),
+            MessageMetadata("abc", 2, "now", MessageType.MissionChanged),
             Json.encodeToJsonElement(
                 MissionChanged(
                     center = "ESA",

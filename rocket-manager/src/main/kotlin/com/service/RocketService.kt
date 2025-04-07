@@ -25,30 +25,30 @@ object RocketService {
         logger.info("Handling $type for channel=$channel with content=${wrapper.message}")
 
         when (type) {
-            "RocketLaunched" -> {
+            MessageType.RocketLaunched -> {
                 val payload = json.decodeFromJsonElement<RocketLaunched>(wrapper.message)
                 rocket.type = payload.type
                 rocket.speed = payload.launchSpeed
                 rocket.mission = payload.mission
             }
 
-            "RocketSpeedIncreased" -> {
+            MessageType.RocketSpeedIncreased-> {
                 val payload = json.decodeFromJsonElement<RocketSpeedIncreased>(wrapper.message)
                 rocket.speed += payload.by
             }
 
-            "RocketSpeedDecreased" -> {
+            MessageType.RocketSpeedDecreased -> {
                 val payload = json.decodeFromJsonElement<RocketSpeedDecreased>(wrapper.message)
                 rocket.speed -= payload.by
             }
 
-            "RocketExploded" -> {
+            MessageType.RocketExploded -> {
                 val payload = json.decodeFromJsonElement<RocketExploded>(wrapper.message)
                 rocket.exploded = true
                 rocket.explosionReason = payload.reason
             }
 
-            "MissionChanged" -> {
+            MessageType.MissionChanged -> {
                 val payload = json.decodeFromJsonElement<MissionChanged>(wrapper.message)
                 payload.channels.forEach { id ->
                     rockets[id]?.let { rocket ->

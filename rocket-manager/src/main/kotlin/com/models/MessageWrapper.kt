@@ -7,7 +7,7 @@ data class MessageMetadata(
     val channel: String,
     val messageNumber: Int,
     val messageTime: String,
-    val messageType: String
+    val messageType: MessageType
 )
 
 @Serializable
